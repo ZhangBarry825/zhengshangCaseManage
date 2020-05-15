@@ -33,10 +33,24 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      let formData = new FormData()
+      formData.append('username', username)
+      formData.append('password', password)
+
+      login(formData).then(response => {
+        console.log(response,'login Info');
+        let token=response.data.token
+        commit('SET_TOKEN', token)
+        setToken(token)
+
+
+        // const { roles, name, avatar, introduction } = response.data
+        // commit('SET_ROLES', roles)
+        // commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
+        // commit('SET_INTRODUCTION', introduction)
+
+
         resolve()
       }).catch(error => {
         reject(error)
@@ -49,14 +63,21 @@ const actions = {
     return new Promise((resolve, reject) => {
       console.log('getInfo('+state.token+')')
       getInfo(state.token).then(response => {
-        const { data } = response
 
-        if (!data) {
+        if (!response) {
           reject('验证失败，请重新登录。')
         }
-
-        const { roles, name, avatar, introduction } = data
-
+        let roles=[response.data.role];
+        let name=[response.data.nikeName];
+        let avatar='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif';
+        let introduction='个人信息简介';
+        // const { roles, name, avatar, introduction } = data.data
+        let data= {
+          roles:roles,
+          name:name,
+          avatar:avatar,
+          introduction:introduction,
+        }
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
@@ -66,6 +87,7 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
+
         resolve(data)
       }).catch(error => {
         reject(error)

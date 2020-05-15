@@ -11,6 +11,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import fa from "element-ui/src/locale/lang/fa";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -129,61 +130,126 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+
   {
-    path: '/permission',
+    path: '/case-list',
     component: Layout,
-    redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'CaseManage',
     meta: {
-      title: '权限',
-      icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      title: '案例管理',
+      icon: 'excel'
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: '页面权限',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+        path: 'list',
+        component: () => import('@/views/case-list/index'),
+        name: 'CaseList',
+        meta: { title: '案例列表', icon: 'list', noCache: true  },
+
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: '指令权限'
-          // if do not set roles, means: this page does not require permission
-        }
+        path: 'create',
+        component: () => import('@/views/case-list/create'),
+        name: 'CreateCase',
+        meta: { title: '新增案例', icon: 'edit', noCache: true ,roles: ['admin'] },
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: '角色权限',
-          roles: ['admin']
-        }
-      }
+        path: 'update',
+        component: () => import('@/views/case-list/update'),
+        name: 'UpdateCase',
+        meta: { title: '案例修改', icon: 'edit', noCache: true},
+        hidden:true
+      },
     ]
   },
-
   {
     path: '/user-list',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    name: 'UserManage',
+    meta: {
+      title: '用户管理',
+      icon: 'peoples',
+      roles: ['admin']
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/user-list/index'),
+        name: 'CaseList',
+        meta: { title: '用户列表', icon: 'list', noCache: true  },
+
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/user-list/create'),
+        name: 'CreateUser',
+        meta: { title: '新增用户', icon: 'edit', noCache: true  },
+
+      },
+      {
+        path: 'update',
+        component: () => import('@/views/user-list/update'),
+        name: 'UpdateUser',
+        meta: { title: '用户修改', icon: 'edit', noCache: false},
+        hidden:true
+      },
+    ]
+  },
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Permission',
+  //   meta: {
+  //     title: '权限',
+  //     icon: 'lock',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'page',
+  //       component: () => import('@/views/permission/page'),
+  //       name: 'PagePermission',
+  //       meta: {
+  //         title: '页面权限',
+  //         roles: ['admin'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'directive',
+  //       component: () => import('@/views/permission/directive'),
+  //       name: 'DirectivePermission',
+  //       meta: {
+  //         title: '指令权限'
+  //         // if do not set roles, means: this page does not require permission
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/permission/role'),
+  //       name: 'RolePermission',
+  //       meta: {
+  //         title: '角色权限',
+  //         roles: ['admin']
+  //       }
+  //     }
+  //   ]
+  // },
+  {
+    path: '/icon',
     component: Layout,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/user-list/index'),
+        component:  () => import('@/views/icons/index'),
         name: 'Icons',
-        meta: { title: '用户列表', icon: 'icon', noCache: true  }
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
     ]
   },
-
 
 
   /** when your routing map is too long, you can split it into small modules **/
@@ -236,31 +302,31 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: '错误页面',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
+  //
+  // {
+  //   path: '/error',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'ErrorPages',
+  //   meta: {
+  //     title: '错误页面',
+  //     icon: '404'
+  //   },
+  //   children: [
+  //     {
+  //       path: '401',
+  //       component: () => import('@/views/error-page/401'),
+  //       name: 'Page401',
+  //       meta: { title: '401', noCache: true }
+  //     },
+  //     {
+  //       path: '404',
+  //       component: () => import('@/views/error-page/404'),
+  //       name: 'Page404',
+  //       meta: { title: '404', noCache: true }
+  //     }
+  //   ]
+  // },
 
   // {
   //   path: '/error-log',

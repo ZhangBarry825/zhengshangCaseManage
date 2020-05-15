@@ -1,9 +1,9 @@
 <template>
-  <div class="user-box">
-    <h2>用户列表</h2>
+  <div class="content-box">
+    <h2>案例列表</h2>
     <el-button-group style="padding: 5px 10px">
-      <el-button size="small" type="primary" icon="el-icon-edit" @click="createCase">新增</el-button>
-      <el-button size="small"  type="primary" icon="el-icon-delete" @click="deleteCase">删除</el-button>
+      <el-button size="small" type="primary" icon="el-icon-edit" @click="createCase" v-if="checkPermission(['admin'])">新增</el-button>
+      <el-button size="small"  type="primary" icon="el-icon-delete" @click="deleteCase" v-if="checkPermission(['admin'])">删除</el-button>
     </el-button-group>
     <el-table
       ref="multipleTable"
@@ -18,30 +18,30 @@
         width="55">
       </el-table-column>
       <el-table-column
-        prop="username"
-        label="用户账号"
-        width="150">
+        label="案例名"
+        width="120">
+        <template slot-scope="scope">{{ scope.row.caseName }}</template>
       </el-table-column>
       <el-table-column
-        prop="nikeName"
-        label="用户昵称"
-        width="150">
+        prop="caseGroup"
+        label="案例分组"
+        width="120">
       </el-table-column>
       <el-table-column
-        prop="role"
-        label="用户角色"
+        prop="caseIndexUrl"
+        label="项目网站路径"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        prop="password"
-        label="用户密码"
+        prop="caseBackgroundUrl"
+        label="项目后台管理网站路径"
         show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="220" v-if="checkPermission(['admin'])">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -50,15 +50,15 @@
       </el-table-column>
     </el-table>
 
-    <!--    <div style="margin-top: 20px">-->
-    <!--      <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
-    <!--      <el-button @click="toggleSelection()">取消选择</el-button>-->
-    <!--    </div>-->
+<!--    <div style="margin-top: 20px">-->
+<!--      <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
+<!--      <el-button @click="toggleSelection()">取消选择</el-button>-->
+<!--    </div>-->
 
     <el-pagination
       class="pagination"
       background
-      @current-change="changeUser"
+      @current-change="changePage"
       :current-page="pageNum"
       layout="prev, pager, next"
       :total="totalNum">
@@ -68,7 +68,8 @@
 </template>
 
 <script>
-  import {deleteUser, getUserList} from '@/api/users'
+  import checkPermission from '@/utils/permission' // 权限判断函数
+  import {deleteCase, getCaseList} from '@/api/case'
   export default {
     name: "CaseList",
     data() {
@@ -84,6 +85,7 @@
       }
     },
     methods: {
+      checkPermission,
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -100,7 +102,7 @@
         console.log(index, row);
 
         this.$router.push({
-          name:'UpdateUser',
+          name:'UpdateCase',
           params:{
             id:row.id
           }
@@ -115,14 +117,14 @@
           type: 'warning'
         }).then(() => {
           let formData=new FormData()
-          formData.append('username',row.username)
-          deleteUser(formData).then(res=>{
+          formData.append('id',row.id)
+          deleteCase(formData).then(res=>{
             console.log(res,'res')
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
-            that.changeUser(that.pageNum)
+            that.changePage(that.pageNum)
           })
 
         }).catch(() => {
@@ -133,7 +135,7 @@
         });
 
       },
-      changeUser(currentPage){
+      changePage(currentPage){
         let num = this.totalNum / this.pageSize
         if(num < this.pageNum){
           if(currentPage>1){
@@ -153,7 +155,7 @@
           pageNum:this.pageNum,
           pageSize:this.pageSize,
         }
-        getUserList(data).then(res=>{
+        getCaseList(data).then(res=>{
           console.log(res.data)
           if(res.data!=null){
             that.tableData=res.data.list
@@ -169,7 +171,7 @@
       },
       createCase(){
         this.$router.push({
-          path: '/user-list/create'
+          path: '/case-list/create'
         })
       },
       deleteCase(data){
@@ -183,12 +185,12 @@
 </script>
 
 <style scoped lang="scss">
-  .user-box{
-    padding: 20px;
-    box-sizing: border-box;
+.content-box{
+  padding: 20px;
+  box-sizing: border-box;
 
-    .pagination{
-      margin: 20px 0;
-    }
+  .pagination{
+    margin: 20px 0;
   }
+}
 </style>

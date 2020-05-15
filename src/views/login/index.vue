@@ -1,9 +1,11 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
+      <div class="logo-center">
+        <img src="../../../public/images/ss_logo.png" alt="">
+      </div>
       <div class="title-container">
-        <h3 class="title">管理系统登录</h3>
+        <h4 class="title">案例管理系统登录</h4>
       </div>
 
       <el-form-item prop="username">
@@ -84,23 +86,24 @@ export default {
   },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
+      // if (!validUsername(value)) {
+      //   callback(new Error('请输入正确的用户名'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码不能少于6位'))
+      if (value.length < 4) {
+        callback(new Error('密码不能少于4位'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -218,6 +221,7 @@ $cursor: #fff;
   }
 }
 
+
 /* reset element-ui css */
 .login-container {
   .el-input {
@@ -269,6 +273,17 @@ $light_gray:#eee;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+
+
+    .logo-center{
+      width: 450px;
+      text-align: center;
+      padding: 30px 0;
+      img{
+        width: 250px;
+        height: auto;
+      }
+    }
   }
 
   .tips {
@@ -295,7 +310,7 @@ $light_gray:#eee;
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 22px;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;

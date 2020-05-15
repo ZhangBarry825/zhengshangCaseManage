@@ -3,13 +3,27 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  withCredentials: true, // send cookies when cross-domain requests  跨域请求时允许携带凭证（cookie）
+  timeout: 50000, // request timeout
+  headers: {  'Content-Type': 'application/x-www-form-urlencoded'  },
+  // 修改请求数据
+  // transformRequest: [function (data, headers) {
+  //   let ret = ''
+  //   for (let it in data) {
+  //     // 去除空字符串的请求字段
+  //     if (data[it] !== '') {
+  //       if (ret !== '') ret += '&'
+  //       ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it])
+  //     }
+  //   }
+  //   return ret
+  // }]
 })
-
+// console.log(service.,123)
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -46,9 +60,9 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
@@ -72,7 +86,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('请求错误' + error) // for debug
     Message({
       message: error.message,
       type: 'error',
