@@ -1,4 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import Layout from "@/layout/index";
+import store from "@/store";
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -46,14 +48,21 @@ const mutations = {
   }
 }
 
+
+//根据用户权限修改侧栏路由  ！！！
 const actions = {
   generateRoutes({ commit }, roles) {
+    // getInfo().then(res=>{
+    //   console.log(res,'我没成功')
+    // })
     return new Promise(resolve => {
       let accessedRoutes
+      //判断角色权限
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+
       }
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

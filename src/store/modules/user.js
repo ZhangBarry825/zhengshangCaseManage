@@ -44,14 +44,15 @@ const actions = {
     })
   },
 
-  // get user info
+  // get user info 根据token调取接口获取userInfo
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
+      console.log('getInfo('+state.token+')')
       getInfo(state.token).then(response => {
         const { data } = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('验证失败，请重新登录。')
         }
 
         const { roles, name, avatar, introduction } = data
