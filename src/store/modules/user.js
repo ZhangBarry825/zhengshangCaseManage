@@ -69,7 +69,8 @@ const actions = {
         }
         let roles=[response.data.role];
         let name=[response.data.nikeName];
-        let avatar='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif';
+        // let avatar='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif';
+        let avatar=require("../../../public/images/title_logo.png");
         let introduction='个人信息简介';
         // const { roles, name, avatar, introduction } = data.data
         let data= {

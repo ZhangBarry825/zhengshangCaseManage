@@ -86,11 +86,14 @@ export default {
   },
   data() {
     const validateUsername = (rule, value, callback) => {
+
+      //验证用户名
       // if (!validUsername(value)) {
-      //   callback(new Error('请输入正确的用户名'))
-      // } else {
-      //   callback()
-      // }
+      if (value.length < 1) {
+        callback(new Error('请输入正确的用户名'))
+      } else {
+        callback()
+      }
       callback()
     }
     const validatePassword = (rule, value, callback) => {

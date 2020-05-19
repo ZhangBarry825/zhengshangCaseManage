@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import {createCase, getCase, getCaseGorupList, updateCase} from '@/api/case'
+  import {createCase, getCase, getCaseGroupList, updateCase} from '@/api/case'
   import {getRoleGroupList, getUser, updateUser} from "@/api/users";
   export default {
     name: "UpdateUser",

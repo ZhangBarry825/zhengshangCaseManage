@@ -11,6 +11,20 @@
           <el-option :label="item" :value="item" v-for="item in groupList"></el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="功能描述" prop="functionDes">
+        <el-input v-model="ruleForm.functionDes"></el-input>
+      </el-form-item>
+      <el-form-item label="项目语言" prop="language">
+        <el-input v-model="ruleForm.language"></el-input>
+      </el-form-item>
+      <el-form-item label="项目报价" prop="price">
+        <el-input v-model="ruleForm.price" type="number" onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
+      </el-form-item>
+      <el-form-item label="演示图片" prop="imageUrl">
+        <el-input v-model="ruleForm.imageUrl"></el-input>
+      </el-form-item>
+
       <el-form-item label="案例网站地址" prop="caseIndexUrl">
         <el-input v-model="ruleForm.caseIndexUrl"></el-input>
       </el-form-item>
@@ -29,7 +43,7 @@
 </template>
 
 <script>
-  import {createCase, getCase, getCaseGorupList, updateCase} from '@/api/case'
+  import {createCase, getCase, getCaseGroupList, updateCase} from '@/api/case'
   export default {
     name: "UpdateCase",
     data() {
@@ -40,6 +54,10 @@
           caseIndexUrl: '',
           caseGroup: '',
           caseBackgroundUrl: '',
+          functionDes:'',
+          language:'',
+          price:'',
+          imageUrl:'',
         },
         groupList:'',
 
@@ -55,6 +73,18 @@
           ],
           caseBackgroundUrl: [
             { required: true, message: '请填写案例后台地址', trigger: 'blur' }
+          ],
+          functionDes: [
+            { required: true, message: '请填写功能描述', trigger: 'blur' }
+          ],
+          language: [
+            { required: true, message: '请填写项目语言', trigger: 'blur' }
+          ],
+          price: [
+            { required: true, message: '请填写项目报价', trigger: 'blur' },
+          ],
+          imageUrl: [
+            { required: true, message: '请填写演示图片', trigger: 'blur' }
           ]
         }
       }
@@ -66,7 +96,7 @@
       fetchCaseGroupList(){
         console.log('获取数据')
         let that=this
-        getCaseGorupList({}).then(res=>{
+        getCaseGroupList({}).then(res=>{
           that.groupList=res.data
         })
       },
@@ -90,6 +120,12 @@
             formData.append('caseIndexUrl', that.ruleForm.caseIndexUrl)
             formData.append('caseGroup', that.ruleForm.caseGroup)
             formData.append('caseBackgroundUrl', that.ruleForm.caseBackgroundUrl)
+
+            formData.append('functionDes', that.ruleForm.functionDes)
+            formData.append('language', that.ruleForm.language)
+            formData.append('price', that.ruleForm.price)
+            formData.append('imageUrl', that.ruleForm.imageUrl)
+
 
             updateCase(formData).then(res=>{
               console.log(res,'res')

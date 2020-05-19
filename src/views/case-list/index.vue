@@ -6,6 +6,7 @@
       <el-button size="small"  type="primary" icon="el-icon-delete" @click="deleteCase" v-if="checkPermission(['admin'])">删除</el-button>
     </el-button-group>
     <el-table
+      stripe
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
@@ -18,26 +19,45 @@
         width="55">
       </el-table-column>
       <el-table-column
-        label="案例名"
-        width="120">
+        label="案例名">
         <template slot-scope="scope">{{ scope.row.caseName }}</template>
       </el-table-column>
       <el-table-column
         prop="caseGroup"
-        label="案例分组"
-        width="120">
+        label="案例分组">
+      </el-table-column>
+      <el-table-column
+        prop="functionDes"
+        label="功能描述">
+      </el-table-column>
+      <el-table-column
+        prop="language"
+        label="项目语言">
+      </el-table-column>
+      <el-table-column
+        prop="price"
+        label="项目报价">
+      </el-table-column>
+      <el-table-column
+        label="演示图片">
+        <template slot-scope="scope">
+<!--          {{ scope.row.imageUrl }}-->
+          <img class="sampleImg" src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" alt="">
+        </template>
       </el-table-column>
       <el-table-column
         prop="caseIndexUrl"
-        label="项目网站路径"
+        label="网站路径"
+        width="250"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         prop="caseBackgroundUrl"
-        label="项目后台管理网站路径"
+        label="后台路径"
+        width="250"
         show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="操作" width="220" v-if="checkPermission(['admin'])">
+      <el-table-column label="操作" width="220" v-if="checkPermission(['admin'])" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -136,15 +156,18 @@
 
       },
       changePage(currentPage){
-        let num = this.totalNum / this.pageSize
-        if(num < this.pageNum){
+        let num = this.totalNum % this.pageSize
+        console.log(this.totalNum,'this.totalNum')
+        console.log(this.pageSize,'this.pageSize')
+        console.log(num,'num')
+        if(num > 1){
+          this.pageNum=currentPage
+        }else {
           if(currentPage>1){
             this.pageNum=currentPage - 1
           }else {
             this.pageNum=currentPage
           }
-        }else {
-          this.pageNum=currentPage
         }
         this.fetchData()
       },
@@ -191,6 +214,11 @@
 
   .pagination{
     margin: 20px 0;
+  }
+
+  .sampleImg{
+    width: 50px;
+    height: 50px;
   }
 }
 </style>

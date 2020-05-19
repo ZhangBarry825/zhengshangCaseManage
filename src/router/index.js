@@ -161,6 +161,26 @@ export const asyncRoutes = [
         meta: { title: '案例修改', icon: 'edit', noCache: true},
         hidden:true
       },
+      {
+        path: 'group-list',
+        component: () => import('@/views/group-list/index'),
+        name: 'GroupList',
+        meta: { title: '分组列表', icon: 'list', noCache: true ,roles: ['admin']  },
+
+      },
+      {
+        path: 'group-create',
+        component: () => import('@/views/group-list/create'),
+        name: 'CreateGroup',
+        meta: { title: '新增分组', icon: 'edit', noCache: true ,roles: ['admin'] },
+      },
+      {
+        path: 'group-update',
+        component: () => import('@/views/group-list/update'),
+        name: 'UpdateGroup',
+        meta: { title: '分组修改', icon: 'edit', noCache: true},
+        hidden:true
+      },
     ]
   },
   {
@@ -238,18 +258,18 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component:  () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component:  () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
 
   /** when your routing map is too long, you can split it into small modules **/

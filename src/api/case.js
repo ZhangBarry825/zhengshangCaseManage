@@ -8,13 +8,7 @@ export function getCaseList(data) {
     params:data
   })
 }
-export function getCaseGorupList(data) {
-  return request({
-    url: '/case/queryCaseGroup',
-    method: 'get',
-    params:data
-  })
-}
+
 export function getCase(data) {
   return request({
     url: '/case/user/queryById',
@@ -43,9 +37,13 @@ export function deleteCase(data) {
     data
   })
 }
-export function logout() {
+
+
+export function getCaseGroupList(data) {
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+    url: '/case/queryCaseGroup',
+    method: 'get',
+    params:data
   })
 }
+
