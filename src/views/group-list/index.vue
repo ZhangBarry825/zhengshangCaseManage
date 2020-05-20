@@ -19,16 +19,16 @@
 
       <el-table-column
         type="selection"
-        width="55">
+        width="100">
       </el-table-column>
 
       <el-table-column
         prop="caseGroup"
-        width="300"
+
         label="案例分组">
       </el-table-column>
 
-      <el-table-column label="操作" width="220" v-if="checkPermission(['admin'])">
+      <el-table-column label="操作" width="220" v-if="checkPermission(['admin'])" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -112,7 +112,7 @@
               type: 'success',
               message: '删除成功!'
             });
-            that.changePage(that.pageNum)
+            that.changePage(that.pageNum,true)
           })
 
         }).catch(() => {
@@ -123,16 +123,20 @@
         });
 
       },
-      changePage(currentPage) {
-        let num = this.totalNum % this.pageSize
-        if (num > 1) {
-          this.pageNum = currentPage
-        } else {
-          if (currentPage > 1) {
-            this.pageNum = currentPage - 1
-          } else {
+      changePage(currentPage, isDelete = false) {
+        if (isDelete) {
+          let num = this.totalNum % this.pageSize
+          if (num > 1) {
             this.pageNum = currentPage
+          } else {
+            if (currentPage > 1) {
+              this.pageNum = currentPage - 1
+            } else {
+              this.pageNum = currentPage
+            }
           }
+        }else {
+          this.pageNum=currentPage
         }
         this.fetchData()
       },

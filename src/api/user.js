@@ -22,3 +22,11 @@ export function logout() {
     method: 'post'
   })
 }
+export function uploadFile(data) {
+  return request({
+    url:'/image/up',
+    method:'post',
+    data
+  })
+
+}

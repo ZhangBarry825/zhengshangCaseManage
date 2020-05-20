@@ -1,9 +1,21 @@
 <template>
   <div class="content-box">
     <h2>案例列表</h2>
-    <el-button-group style="padding: 5px 10px">
-      <el-button size="small" type="primary" icon="el-icon-edit" @click="createCase" v-if="checkPermission(['admin'])">新增</el-button>
-      <el-button size="small"  type="primary" icon="el-icon-delete" @click="deleteCase" v-if="checkPermission(['admin'])">删除</el-button>
+    <el-button-group style="padding: 5px 10px;box-sizing: border-box;display: flex;align-items: center">
+      <el-button size="small" type="primary" icon="el-icon-edit" @click="createCase" v-if="checkPermission(['admin'])">
+        新增
+      </el-button>
+      <el-button size="small" type="primary" icon="el-icon-delete" @click="deleteCase" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px"
+                 v-if="checkPermission(['admin'])">删除
+      </el-button>
+      <el-select style="margin-left: 30px" @change="changeGroup" v-model="nowGroupName" placeholder="按分组查询">
+        <el-option
+          v-for="item in groupList"
+          :key="item.text"
+          :label="item.text"
+          :value="item.value">
+        </el-option>
+      </el-select>
     </el-button-group>
     <el-table
       stripe
@@ -23,13 +35,19 @@
         <template slot-scope="scope">{{ scope.row.caseName }}</template>
       </el-table-column>
       <el-table-column
-        prop="caseGroup"
-        label="案例分组">
-      </el-table-column>
-      <el-table-column
+
         prop="functionDes"
         label="功能描述">
       </el-table-column>
+
+      <el-table-column
+        prop="caseGroup"
+        label="案例分组">
+        <template slot-scope="scope">
+          <el-tag type="primary" disable-transitions>{{scope.row.caseGroup}}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="language"
         label="项目语言">
@@ -41,8 +59,8 @@
       <el-table-column
         label="演示图片">
         <template slot-scope="scope">
-<!--          {{ scope.row.imageUrl }}-->
-          <img class="sampleImg" src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" alt="">
+          <!--          {{ scope.row.imageUrl }}-->
+          <img class="sampleImg" :src="scope.row.imageUrl" alt="" @click="showImage(scope.row.imageUrl)">
         </template>
       </el-table-column>
       <el-table-column
@@ -61,19 +79,21 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>
+            @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="handleDelete(scope.$index, scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-<!--    <div style="margin-top: 20px">-->
-<!--      <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
-<!--      <el-button @click="toggleSelection()">取消选择</el-button>-->
-<!--    </div>-->
+    <!--    <div style="margin-top: 20px">-->
+    <!--      <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>-->
+    <!--      <el-button @click="toggleSelection()">取消选择</el-button>-->
+    <!--    </div>-->
 
     <el-pagination
       class="pagination"
@@ -89,22 +109,36 @@
 
 <script>
   import checkPermission from '@/utils/permission' // 权限判断函数
-  import {deleteCase, getCaseList} from '@/api/case'
+  import {deleteCase, getCaseGroupList, getCaseList} from '@/api/case'
+
   export default {
     name: "CaseList",
     data() {
       return {
-        tableData: [
-
-        ],
+        nowGroupName:'',
+        groupList: [],
+        tableData: [],
         multipleSelection: [],
-        loading:false,
-        pageNum:1,
-        pageSize:10,
-        totalNum:0
+        loading: false,
+        pageNum: 1,
+        pageSize: 10,
+        totalNum: 0
       }
     },
     methods: {
+      changeGroup(){
+        this.pageNum=1
+        this.totalNum=0
+        this.fetchData()
+      },
+      showImage(path) {
+        this.$alert("<img src=" + path + " style='max-width:100%;max-height:100%'>", '', {
+          dangerouslyUseHTMLString: true,
+          showConfirmButton: false,
+          customClass: 'clickShowImg',
+          center: true,
+        });
+      },
       checkPermission,
       toggleSelection(rows) {
         if (rows) {
@@ -122,9 +156,9 @@
         console.log(index, row);
 
         this.$router.push({
-          name:'UpdateCase',
-          params:{
-            id:row.id
+          name: 'UpdateCase',
+          params: {
+            id: row.id
           }
         })
       },
@@ -136,15 +170,15 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let formData=new FormData()
-          formData.append('id',row.id)
-          deleteCase(formData).then(res=>{
-            console.log(res,'res')
+          let formData = new FormData()
+          formData.append('id', row.id)
+          deleteCase(formData).then(res => {
+            console.log(res, 'res')
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
-            that.changePage(that.pageNum)
+            that.changePage(that.pageNum, true)
           })
 
         }).catch(() => {
@@ -155,70 +189,99 @@
         });
 
       },
-      changePage(currentPage){
-        let num = this.totalNum % this.pageSize
-        console.log(this.totalNum,'this.totalNum')
-        console.log(this.pageSize,'this.pageSize')
-        console.log(num,'num')
-        if(num > 1){
-          this.pageNum=currentPage
-        }else {
-          if(currentPage>1){
-            this.pageNum=currentPage - 1
-          }else {
-            this.pageNum=currentPage
+      changePage(currentPage, isDelete = false) {
+        if (isDelete) {
+          let num = this.totalNum % this.pageSize
+          console.log(this.totalNum, 'this.totalNum')
+          console.log(this.pageSize, 'this.pageSize')
+          console.log(num, 'num')
+          if (num > 1) {
+            this.pageNum = currentPage
+          } else {
+            if (currentPage > 1) {
+              this.pageNum = currentPage - 1
+            } else {
+              this.pageNum = currentPage
+            }
           }
+        } else {
+          this.pageNum = currentPage
         }
         this.fetchData()
       },
-      fetchData(){
-        let that=this
-        this.loading=true
-        let data={
-          pageNum:this.pageNum,
-          pageSize:this.pageSize,
+      fetchData() {
+        let that = this
+        this.loading = true
+        let data = {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
         }
-        getCaseList(data).then(res=>{
+        if(this.nowGroupName!==''){
+          data.caseGroup=this.nowGroupName
+        }
+
+        getCaseList(data).then(res => {
           console.log(res.data)
-          if(res.data!=null){
-            that.tableData=res.data.list
-            that.totalNum=res.data.total
-            that.loading=false
-          }else {
-            that.tableData=[]
-            that.totalNum=0
-            that.loading=false
+          if (res.data != null) {
+            that.tableData = res.data.list
+            that.totalNum = res.data.total
+            that.loading = false
+          } else {
+            that.tableData = []
+            that.totalNum = 0
+            that.loading = false
           }
 
         })
       },
-      createCase(){
+      createCase() {
         this.$router.push({
           path: '/case-list/create'
         })
       },
-      deleteCase(data){
-        console.log(this.multipleSelection )
-      }
+      deleteCase(data) {
+        console.log(this.multipleSelection)
+      },
+      fetchCaseGroupList() {
+        console.log('获取数据')
+        let that = this
+        getCaseGroupList({}).then(res => {
+          let newList = []
+          newList.push({
+            text:'全部',
+            value:''
+          })
+          for (let i = 0; i < res.data.length; i++) {
+            newList.push({
+              text: res.data[i],
+              value: res.data[i]
+            })
+          }
+          that.groupList = newList
+          console.log('newList', newList)
+        })
+      },
     },
     created() {
       this.fetchData()
+      this.fetchCaseGroupList()
     }
   }
 </script>
 
 <style scoped lang="scss">
-.content-box{
-  padding: 20px;
-  box-sizing: border-box;
+  .content-box {
+    padding: 20px;
+    box-sizing: border-box;
 
-  .pagination{
-    margin: 20px 0;
-  }
+    .pagination {
+      margin: 20px 0;
+    }
 
-  .sampleImg{
-    width: 50px;
-    height: 50px;
+    .sampleImg {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
   }
-}
 </style>
