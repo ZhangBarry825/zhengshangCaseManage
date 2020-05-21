@@ -218,6 +218,18 @@ export const asyncRoutes = [
     ]
   },
   // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component:  () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
+  // {
   //   path: '/permission',
   //   component: Layout,
   //   redirect: '/permission/page',
@@ -258,18 +270,7 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component:  () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+
 
 
   /** when your routing map is too long, you can split it into small modules **/

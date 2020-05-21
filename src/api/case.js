@@ -41,7 +41,7 @@ export function deleteCase(data) {
 
 export function getCaseGroupList(data) {
   return request({
-    url: '/case/queryCaseGroup',
+    url: '/case/user/queryCaseGroup',
     method: 'get',
     params:data
   })

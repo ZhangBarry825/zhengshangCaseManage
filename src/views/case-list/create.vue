@@ -124,18 +124,6 @@
           ],
           caseBackgroundUrl: [
             {required: true, message: '请填写案例后台地址', trigger: 'blur'}
-          ],
-          functionDes: [
-            {required: true, message: '请填写功能描述', trigger: 'blur'}
-          ],
-          language: [
-            {required: true, message: '请填写项目语言', trigger: 'blur'}
-          ],
-          price: [
-            {required: true, message: '请填写项目报价', trigger: 'blur'},
-          ],
-          imageUrl: [
-            {required: true, message: '请上传演示图片', trigger: 'blur'}
           ]
         }
       }

@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="用户密码" prop="password">
-        <el-input v-model="ruleForm.password"></el-input>
+        <el-input type="password" v-model="ruleForm.password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('ruleForm')">立即修改</el-button>

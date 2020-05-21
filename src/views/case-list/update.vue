@@ -15,7 +15,7 @@
 
 
       <el-form-item label="功能描述" prop="functionDes">
-        <el-input v-model="ruleForm.functionDes"></el-input>
+        <el-input  type="textarea"  :rows="5" v-model="ruleForm.functionDes"></el-input>
       </el-form-item>
       <el-form-item label="项目语言" prop="language">
         <el-input v-model="ruleForm.language"></el-input>
@@ -23,36 +23,6 @@
       <el-form-item label="项目报价" prop="price">
         <el-input v-model="ruleForm.price" type="number" onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
       </el-form-item>
-<!--      <el-form-item label="演示图片" prop="imageUrl">-->
-<!--        <el-upload-->
-<!--          ref="upload"-->
-<!--          :limit="1"-->
-<!--          action="#"-->
-<!--          list-type="picture-card"-->
-<!--          :http-request="uploadRequest"-->
-<!--          :auto-upload="true">-->
-<!--          <i slot="default" class="el-icon-plus"></i>-->
-
-<!--          <div slot="file" slot-scope="{file}">-->
-<!--            <img-->
-<!--              class="el-upload-list__item-thumbnail"-->
-<!--              :src="file.url" alt="">-->
-<!--            <span class="el-upload-list__item-actions">-->
-<!--              <span-->
-<!--                class="el-upload-list__item-preview"-->
-<!--                @click="handlePictureCardPreview(file)">-->
-<!--                <i class="el-icon-zoom-in"></i>-->
-<!--              </span>-->
-<!--              <span-->
-<!--                v-if="!disabled"-->
-<!--                class="el-upload-list__item-delete"-->
-<!--                @click="handleRemove(file)">-->
-<!--              <i class="el-icon-delete"></i>-->
-<!--              </span>-->
-<!--            </span>-->
-<!--          </div>-->
-<!--        </el-upload>-->
-<!--      </el-form-item>-->
       <el-form-item label="演示图片" prop="imageUrl">
         <el-upload
           class="avatar-uploader"
@@ -120,18 +90,6 @@
           caseBackgroundUrl: [
             { required: true, message: '请填写案例后台地址', trigger: 'blur' }
           ],
-          functionDes: [
-            { required: true, message: '请填写功能描述', trigger: 'blur' }
-          ],
-          language: [
-            { required: true, message: '请填写项目语言', trigger: 'blur' }
-          ],
-          price: [
-            { required: true, message: '请填写项目报价', trigger: 'blur' },
-          ],
-          imageUrl: [
-            { required: true, message: '请填写演示图片', trigger: 'blur' }
-          ]
         }
       }
     },

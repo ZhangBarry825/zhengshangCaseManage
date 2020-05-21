@@ -96,37 +96,11 @@
           }
         })
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-        let that = this
-        this.$confirm('确认删除?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let formData = new FormData()
-          formData.append('id', row.id)
-          deleteCaseGroup(formData).then(res => {
-            console.log(res, 'res')
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-            that.changePage(that.pageNum,true)
-          })
 
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-
-      },
-      changePage(currentPage, isDelete = false) {
+      changePage(currentPage, isDelete = false, deleteNum = 1) {
         if (isDelete) {
           let num = this.totalNum % this.pageSize
-          if (num > 1) {
+          if (num > deleteNum) {
             this.pageNum = currentPage
           } else {
             if (currentPage > 1) {
@@ -166,8 +140,64 @@
           path: '/case-list/group-create'
         })
       },
+      handleDelete(index, row) {
+        console.log(index, row);
+        let that = this
+        this.$confirm('确认删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let formData = new FormData()
+          formData.append('id', row.id)
+          deleteCaseGroup(formData).then(res => {
+            console.log(res, 'res')
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            that.changePage(that.pageNum,true)
+          })
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
+      },
       deleteCase(data) {
-        console.log(this.multipleSelection)
+        let that = this
+        if(that.multipleSelection.length>0){
+          let deleteId=[]
+          for(let i=0;i<that.multipleSelection.length;i++){
+            deleteId.push(that.multipleSelection[i].id)
+          }
+          console.log(deleteId,555)
+          that.$confirm('确认删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let formData = new FormData()
+            formData.append('id', deleteId)
+            deleteCaseGroup(formData).then(res => {
+              console.log(res, 'res')
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.changePage(that.pageNum, true,that.multipleSelection.length)
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
       }
     },
     created() {

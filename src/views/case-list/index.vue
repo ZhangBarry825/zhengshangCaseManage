@@ -31,12 +31,14 @@
         width="55">
       </el-table-column>
       <el-table-column
+        width="200"
         label="案例名">
         <template slot-scope="scope">{{ scope.row.caseName }}</template>
       </el-table-column>
       <el-table-column
-
+        width="200"
         prop="functionDes"
+        show-overflow-tooltip
         label="功能描述">
       </el-table-column>
 
@@ -189,13 +191,49 @@
         });
 
       },
-      changePage(currentPage, isDelete = false) {
+
+      deleteCase(data) {
+        let that = this
+        console.log(that.multipleSelection,123123)
+        if(that.multipleSelection.length>0){
+          let deleteId=[]
+          for(let i=0;i<that.multipleSelection.length;i++){
+            deleteId.push(that.multipleSelection[i].id)
+            console.log(that.multipleSelection[i].id,123)
+          }
+          console.log(deleteId,555)
+          that.$confirm('确认删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let formData = new FormData()
+            formData.append('id', deleteId)
+            deleteCase(formData).then(res => {
+              console.log(res, 'res')
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.changePage(that.pageNum, true,that.multipleSelection.length)
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+
+      },
+      changePage(currentPage, isDelete = false, deleteNum = 1) {
         if (isDelete) {
           let num = this.totalNum % this.pageSize
           console.log(this.totalNum, 'this.totalNum')
           console.log(this.pageSize, 'this.pageSize')
           console.log(num, 'num')
-          if (num > 1) {
+          if (num > deleteNum) {
             this.pageNum = currentPage
           } else {
             if (currentPage > 1) {
@@ -239,9 +277,7 @@
           path: '/case-list/create'
         })
       },
-      deleteCase(data) {
-        console.log(this.multipleSelection)
-      },
+
       fetchCaseGroupList() {
         console.log('获取数据')
         let that = this
