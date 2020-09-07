@@ -2,17 +2,17 @@
   <div class="dashboard-editor-container">
     <div class=" clearfix">
       <pan-thumb :image="avatar" style="float: left">
-        Your roles:
-        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>
+<!--        当前角色:-->
+<!--        <span v-for="item in roles" :key="item" class="pan-info-roles">{{ item }}</span>-->
       </pan-thumb>
-      <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />
+<!--      <github-corner style="position: absolute; top: 0px; border: 0; right: 0;" />-->
       <div class="info-container">
-        <span class="display_name">{{ name }}</span>
-        <span style="font-size:20px;padding-top:20px;display:inline-block;">Editor's Dashboard</span>
+        <span class="display_name">当前权限：{{ name[0] }}</span>
+        <span style="font-size:20px;padding-top:20px;display:inline-block;">编辑者页面</span>
       </div>
     </div>
     <div>
-      <img :src="emptyGif" class="emptyGif">
+<!--      <img :src="emptyGif" class="emptyGif">-->
     </div>
   </div>
 </template>
